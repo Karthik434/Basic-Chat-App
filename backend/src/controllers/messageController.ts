@@ -89,7 +89,7 @@ export const getMessages = async(req:Request,res:Response)=>{
     res.status(200).json({messages: conversation.messages})
   }catch(error:any){
     console.log("Error in getMessages : "+error.message)
-    res.status(400).json({error:"Internal Server Error"})
+    res.status(400).json({message:"Internal Server Error"})
   }
 }
 
