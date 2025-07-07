@@ -1,6 +1,7 @@
 import { useState } from "react"
 import GenderCheckBox from "../../components/utils/GenderCheckBox"
 import {useSignUp} from "../../hooks/useSignUp"
+import { Link } from "react-router-dom"
 
 const SignUp = ()=>{
   const [inputs,setInputs] = useState({
@@ -75,7 +76,7 @@ const handleSubmit = (e:React.FormEvent )=>{
               onCheckBoxChange={handleCheckBoxChange}
             />
            </div>
-          <a href="" className="link link-info inline-block mt-4">Already have an account? </a>
+          <Link  to="/login" className="link link-info inline-block mt-4">Already have an account? </Link>
           <div className="flex justify-center mt-6">
             <button className="btn btn-soft btn-primary w-full" disabled={loading}>{loading?"Loading...":"SignUp"}</button>
           </div>

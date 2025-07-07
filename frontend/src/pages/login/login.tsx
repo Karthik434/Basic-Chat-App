@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useLogin } from "../../hooks/useLogin";
+import { Link } from "react-router-dom";
 
 
 
@@ -44,7 +45,7 @@ const Login = ()=>{
                 }}/>
               </label>
             </div>
-            <a href="" className="link link-info inline-block mt-4">{"Don't"} have an account? </a>
+            <Link to="/signup" className="link link-info inline-block mt-4">{"Don't"} have an account? </Link>
             <div className="flex justify-center pt-6">
               <button className="btn btn-soft btn-primary w-full" disabled={loading}>{loading?"Loading...":"Login"}</button>
             </div>
