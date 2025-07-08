@@ -9,7 +9,7 @@ const MessageContainer = () => {
     <div className="flex-1 flex flex-col min-w-0 pt-5 pl-5 pr-5">
       {selectedConversation ? (<> 
         <div className="bg-slate-500 px-4 py-2 flex-shrink-0 mb-4">
-          <span className="text-gray-900 font-bold">John Doe</span>
+          <span className="text-gray-900 font-bold">{selectedConversation.fullName}</span>
         </div>
         <div className="flex-1 overflow-auto min-h-0">
           <Messages/>
