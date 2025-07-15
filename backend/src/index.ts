@@ -5,7 +5,6 @@ import dotenv from "dotenv"
 import cookieParser from "cookie-parser"
 import { app, server } from "./socket/socket.js"
 import path from "path"
-import expressListEndpoints from "express-list-endpoints";
 
 dotenv.config()
 
@@ -24,10 +23,6 @@ if (process.env.NODE_ENV !== "development") {
 		res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
 	});
 }
-
-
-console.log(expressListEndpoints(app));
-
 
 server.listen(PORT,()=>{
   console.log("Server is Running")

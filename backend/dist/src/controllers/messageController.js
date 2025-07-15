@@ -5,14 +5,13 @@ export const sendMessage = async (req, res) => {
         const { message } = req.body;
         const { id: receiverId } = req.params;
         const senderId = req.userId;
-        const conversations = await prisma.conversation.findMany({
+        let conversation = await prisma.conversation.findFirst({
             where: {
                 participantIds: {
                     hasEvery: [senderId, receiverId]
                 }
             }
         });
-        let conversation = conversations.find(c => c.participantIds.length === 2);
         if (!conversation) {
             conversation = await prisma.conversation.create({
                 data: {
