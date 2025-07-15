@@ -1,6 +1,7 @@
 import { Request,Response } from "express"
 import prisma from "../db/prisma.js";
 import { getReceiverSocketId, io } from "../socket/socket.js";
+import type { Conversation } from "@prisma/client";
 
 export const sendMessage = async (req:Request,res : Response)=>{
   try{
@@ -15,7 +16,7 @@ export const sendMessage = async (req:Request,res : Response)=>{
          }
       }
      })
-     let conversation = conversations.find(c=> c.participantIds.length === 2)
+     let conversation = conversations.find((c: Conversation) => c.participantIds.length === 2);
 
      if(!conversation){
       conversation = await prisma.conversation.create({
