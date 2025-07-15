@@ -1,12 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  // Remove the custom output line
 }
 
 datasource db {
@@ -15,45 +8,41 @@ datasource db {
 }
 
 model User {
-  id  String   @id @default(cuid())
-  username   String   @unique
-  fullName   String
-  password   String
-  gender     Gender
-  profilePic String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  conversationIds String[]  // Added
-  conversations Conversation[]
-  messages      Message[]
+  id              String         @id @default(cuid())
+  username        String         @unique
+  fullName        String
+  password        String
+  gender          Gender
+  profilePic      String
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  conversationIds String[]
+  messages        Message[]
+  conversations   Conversation[] @relation("ConversationToUser")
 }
 
 model Conversation {
-  id  String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  participants User[]
-  participantIds String[] //Added
-  messages     Message[]
-  messageIds String[] //Added
+  id             String    @id @default(cuid())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  messageIds     String[]
+  participantIds String[]
+  messages       Message[]
+  participants   User[]    @relation("ConversationToUser")
 }
 
 model Message {
-  id  String    @id @default(cuid())
+  id             String       @id @default(cuid())
   conversationId String
   senderId       String
-
-  conversation Conversation @relation(fields: [conversationId], references: [id])
-  sender       User         @relation(fields: [senderId], references: [id])
-
-  body      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  body           String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  sender         User         @relation(fields: [senderId], references: [id])
 }
 
 enum Gender {
   male
   female
 }
-

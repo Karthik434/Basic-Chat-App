@@ -1,5 +1,5 @@
 import { useAuthContext } from "../../Context/AuthContext";
-import useConversation, { type MessageType } from "../../zustand/useConversation";
+import { type MessageType } from "../../zustand/useConversation";
 
 
 const Message = ({message}:{message: MessageType}) => {
@@ -9,7 +9,11 @@ const Message = ({message}:{message: MessageType}) => {
   const bubblebg = fromMe? "bg-blue-500":""
   const timestamp = message.createdAt;
   const date = new Date(timestamp);
-  const time = date.toISOString().substring(11, 19);
+    const time = date.toLocaleTimeString("en-IN", {
+    timeZone: "Asia/Kolkata",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
   return (
     <div className={`chat ${chatClass}`}>
