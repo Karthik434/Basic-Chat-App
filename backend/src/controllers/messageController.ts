@@ -1,7 +1,6 @@
 import { Request,Response } from "express"
 import prisma from "../db/prisma.js";
 import { getReceiverSocketId, io } from "../socket/socket.js";
-import { Conversation } from "@prisma/client";
 
 export const sendMessage = async (req:Request,res : Response)=>{
   try{
@@ -9,14 +8,13 @@ export const sendMessage = async (req:Request,res : Response)=>{
     const {id:receiverId} = req.params;
     const senderId = req.userId;
 
-     const conversations = await prisma.conversation.findMany({
+     let conversation = await prisma.conversation.findFirst({
       where:{
          participantIds:{
           hasEvery:[senderId,receiverId]
          }
       }
      })
-     let conversation = conversations.find((c: Conversation) => c.participantIds.length === 2);
 
      if(!conversation){
       conversation = await prisma.conversation.create({
