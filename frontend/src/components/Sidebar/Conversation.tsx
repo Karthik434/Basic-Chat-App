@@ -1,4 +1,4 @@
-import { useSocketContext } from "../../Context/socketContext";
+import { useSocketContext } from "../../Context/SocketContext";
 import type { ConversationType } from "../../zustand/useConversation"
 import useConversation from "../../zustand/useConversation"
 
