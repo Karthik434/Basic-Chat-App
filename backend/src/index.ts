@@ -1,21 +1,22 @@
-import express from "express"
-import authRoutes from "./routes/authRoutes.js"
-import messageRoutes from "./routes/messageRoutes.js"
-import dotenv from "dotenv"
-import cookieParser from "cookie-parser"
-import { app, server } from "./socket/socket.js"
-import path from "path"
+import express from "express";
+import cookieParser from "cookie-parser";
+import path from "path";
 
-dotenv.config()
+import authRoutes from "./routes/authRoutes.js";
+import messageRoutes from "./routes/messageRoutes.js";
 
-const PORT = process.env.PORT||5000;
+import dotenv from "dotenv";
+import { app, server } from "./socket/socket.js";
+dotenv.config();
+
+const PORT = process.env.PORT || 5001;
 const __dirname = path.resolve();
 
-app.use(express.json())
-app.use(cookieParser())
+app.use(cookieParser()); // for parsing cookies
+app.use(express.json()); // for parsing application/json
 
-app.use("/api/auth",authRoutes)
-app.use("/api/messages",messageRoutes)
+app.use("/api/auth", authRoutes);
+app.use("/api/messages", messageRoutes);
 
 if (process.env.NODE_ENV !== "development") {
 	app.use(express.static(path.join(__dirname, "/frontend/dist")));
@@ -24,6 +25,6 @@ if (process.env.NODE_ENV !== "development") {
 	});
 }
 
-server.listen(PORT,()=>{
-  console.log("Server is Running")
-})
+server.listen(PORT, () => {
+	console.log("Server is running on port " + PORT);
+});

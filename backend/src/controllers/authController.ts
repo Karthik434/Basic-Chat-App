@@ -9,25 +9,27 @@ export const signup = async (req: Request, res: Response) => {
 
 		if (!fullName || !username || !password || !confirmPassword || !gender) {
 			res.status(400).json({ error: "Please fill in all fields" });
-      return;
+			return
 		}
 
 		if (password !== confirmPassword) {
 			res.status(400).json({ error: "Passwords don't match" });
-      return
+			return
 		}
 
 		const user = await prisma.user.findUnique({ where: { username } });
 
 		if (user) {
 			res.status(400).json({ error: "Username already exists" });
-      return
+			return
 		}
 
 		const salt = await bcryptjs.genSalt(10);
 		const hashedPassword = await bcryptjs.hash(password, salt);
 
-		const profilePic = gender==="male"?`https://avatar.iran.liara.run/public/boy?username=${username}`: `https://avatar.iran.liara.run/public/girl?username=${username}`;
+		// https://avatar-placeholder.iran.liara.run/
+		const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${username}`;
+		const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${username}`;
 
 		const newUser = await prisma.user.create({
 			data: {
@@ -35,20 +37,20 @@ export const signup = async (req: Request, res: Response) => {
 				username,
 				password: hashedPassword,
 				gender,
-				profilePic
+				profilePic: gender === "male" ? boyProfilePic : girlProfilePic,
 			},
 		});
 
 		if (newUser) {
+			// generate token in a sec
 			generateToken(newUser.id, res);
 
 			res.status(201).json({
 				id: newUser.id,
-				fullName,
-				username,
-				profilePic,
+				fullName: newUser.fullName,
+				username: newUser.username,
+				profilePic: newUser.profilePic,
 			});
-      return
 		} else {
 			res.status(400).json({ error: "Invalid user data" });
 		}
@@ -65,14 +67,14 @@ export const login = async (req: Request, res: Response) => {
 
 		if (!user) {
 			res.status(400).json({ error: "Invalid credentials" });
-      return
+			return
 		}
 
 		const isPasswordCorrect = await bcryptjs.compare(password, user.password);
 
 		if (!isPasswordCorrect) {
 			res.status(400).json({ error: "Invalid credentials" });
-      return
+			return
 		}
 
 		generateToken(user.id, res);
@@ -98,24 +100,23 @@ export const logout = async (req: Request, res: Response) => {
 	}
 };
 
-export const getMe = async (req:Request,res:Response)=>{
-  try{
-    const user = await prisma.user.findUnique({ where: { id: req.userId } });
+export const getMe = async (req: Request, res: Response) => {
+	try {
+		const user = await prisma.user.findUnique({ where: { id: req.user.id } });
 
 		if (!user) {
 			res.status(404).json({ error: "User not found" });
 			return
 		}
 
-    res.status(200).json({
-      id:user.id,
-      fullName:user.fullName,
-      userName: user.username,
-      profilePic: user.profilePic
-    });
-  }
-  catch(error:any){
-    console.log("Error in getMe controller", error.message);
+		res.status(200).json({
+			id: user.id,
+			fullName: user.fullName,
+			username: user.username,
+			profilePic: user.profilePic,
+		});
+	} catch (error: any) {
+		console.log("Error in getMe controller", error.message);
 		res.status(500).json({ error: "Internal Server Error" });
-  }
-}
+	}
+};
